@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>来自月亮的特别讯息</title>
+    <style>
+        :root {
+            --bg-color: #0a0e14;
+            --text-color: #00ffcc;
+        }
 
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 星空背景 */
+        #stars {
+            position: fixed; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -1;
+        }
+
+        /* 机器人设计 */
+        #robot {
+            position: absolute;
+            font-size: 50px;
+            transition: all 3s ease-in-out;
+            transform: scale(0.1);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        /* 对话框 */
+        #dialogue-box {
+            position: absolute;
+            bottom: 20%;
+            width: 80%;
+            text-align: center;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--text-color);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* 扫描线效果 */
+        #scanner {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--text-color);
+            box-shadow: 0 0 20px var(--text-color);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        /* 蛋糕样式 */
+        #cake {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInUp 1s forwards;
+        }
+
+        .tier {
+            background: #ff85a1;
+            border: 4px solid #fff;
+            border-radius: 10px;
+        }
+        .bottom { width: 150px; height: 60px; }
+        .middle { width: 110px; height: 50px; margin-top: -5px;}
+        .top { width: 70px; height: 40px; margin-top: -5px;}
+        .candle {
+            width: 10px; height: 30px;
+            background: #ffd700;
+            position: relative;
+        }
+        .flame {
+            width: 15px; height: 20px;
+            background: orange;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute; top: -15px; left: -2.5px;
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stars"></div>
+    <div id="scanner"></div>
+
+    <div id="robot">🤖</div>
+
+    <div id="dialogue-box"></div>
+
+    <div id="cake">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="tier top"></div>
+        <div class="tier middle"></div>
+        <div class="tier bottom"></div>
+        <h2 style="color: #ff85a1; text-shadow: 0 0 5px white;">HAPPY BIRTHDAY!</h2>
+    </div>
+
+    <script>
+        const robot = document.getElementById('robot');
+        const box = document.getElementById('dialogue-box');
+        const scanner = document.getElementById('scanner');
+        const cake = document.getElementById('cake');
+
+        const scripts = [
+            "正在接近地球...",
+            "你好，人类。",
+            "我来这里的目的是查看地球上发生了一件不寻常的事情。",
+            "正在扫描当前区域...",
+            "扫描完成。",
+            "原来今天是个特殊的日子。",
+            "我代表月亮祝你生日快乐！"
+        ];
+
+        async function startSequence() {
+            // 1. 机器人靠近
+            await wait(500);
+            robot.style.opacity = "1";
+            robot.style.transform = "scale(2) translateY(-50px)";
+            
+            await wait(3000);
+
+            // 2. 循环显示对话
+            for(let i=0; i < scripts.length; i++) {
+                if (scripts[i] === "正在扫描当前区域...") {
+                    scanner.style.display = "block";
+                    await showText(scripts[i], 2000);
+                    scanner.style.display = "none";
+                } else {
+                    await showText(scripts[i], 3000);
+                }
+            }
+
+            // 3. 弹出蛋糕
+            robot.style.opacity = "0";
+            cake.style.display = "flex";
+        }
+
+        function showText(text, delay) {
+            return new Promise(resolve => {
+                box.innerText = text;
+                box.style.opacity = "1";
+                setTimeout(() => {
+                    box.style.opacity = "0";
+                    setTimeout(resolve, 500); // 等待淡出动画
+                }, delay);
+            });
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // 点击屏幕开始（手机浏览器通常需要交互才能播放音效或启动动画）
+        window.onclick = () => {
+            if(robot.style.opacity == "0" && cake.style.display == "none") {
+                startSequence();
+            }
+        };
+
+        // 提示点击
+        box.innerText = "—— 点击屏幕接收星际信号 ——";
+        box.style.opacity = "1";
+    </script>
+</body>
+</html>
