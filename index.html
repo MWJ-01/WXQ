@@ -1,193 +1,312 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>来自月亮的特别讯息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TO WXQ</title>
     <style>
         :root {
-            --bg-color: #0a0e14;
-            --text-color: #00ffcc;
+            --bg-color: #030816;
+            --text-color: #d1d9e6;
+            --accent: #ffb7c5;
+            --cyan: #81e6d9;
+            --candle-gold: #ffcc33;
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* 星空背景 */
         #stars {
-            position: fixed; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            z-index: -1;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 20%, #1a2a4a 0%, #030816 100%);
         }
 
-        /* 机器人设计 */
-        #robot {
+        .star {
             position: absolute;
-            font-size: 50px;
-            transition: all 3s ease-in-out;
-            transform: scale(0.1);
-            opacity: 0;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: blink var(--d) infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            width: 85%;
+            max-width: 400px;
+            text-align: center;
             z-index: 10;
         }
 
-        /* 对话框 */
+        /* 优化后的清晰大字号 */
         #dialogue-box {
-            position: absolute;
-            bottom: 20%;
-            width: 80%;
-            text-align: center;
-            font-size: 1.2rem;
-            text-shadow: 0 0 10px var(--text-color);
+            font-size: 1.25rem;
+            line-height: 2.2;
+            font-weight: 300;
+            min-height: 8em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        #wish-area {
+            display: none;
             opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        /* 扫描线效果 */
-        #scanner {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-            background: var(--text-color);
-            box-shadow: 0 0 20px var(--text-color);
-            animation: scan 2s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        /* 蛋糕样式 */
-        #cake {
-            display: none;
             flex-direction: column;
             align-items: center;
-            animation: fadeInUp 1s forwards;
+            transition: opacity 1.5s;
         }
 
-        .tier {
-            background: #ff85a1;
-            border: 4px solid #fff;
-            border-radius: 10px;
-        }
-        .bottom { width: 150px; height: 60px; }
-        .middle { width: 110px; height: 50px; margin-top: -5px;}
-        .top { width: 70px; height: 40px; margin-top: -5px;}
-        .candle {
-            width: 10px; height: 30px;
-            background: #ffd700;
-            position: relative;
-        }
         .flame {
-            width: 15px; height: 20px;
-            background: orange;
+            width: 18px;
+            height: 28px;
+            background: var(--candle-gold);
             border-radius: 50% 50% 20% 20%;
-            position: absolute; top: -15px; left: -2.5px;
-            animation: flicker 0.1s infinite alternate;
+            filter: blur(1px) drop-shadow(0 0 15px var(--candle-gold));
+            margin: 40px auto;
+            animation: flicker 0.15s infinite alternate;
+            transition: transform 1.5s ease-in, opacity 1s;
         }
 
         @keyframes flicker {
-            from { transform: scale(1); opacity: 0.8; }
-            to { transform: scale(1.1); opacity: 1; }
+            from {
+                transform: scaleX(0.95);
+                opacity: 0.8;
+            }
+
+            to {
+                transform: scaleX(1.05);
+                opacity: 1;
+            }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
+        button {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 3px;
+            transition: all 0.5s;
+        }
+
+        #cake-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 2.5s forwards;
+        }
+
+        .cake {
+            font-size: 80px;
+            filter: drop-shadow(0 0 20px var(--accent));
+            margin: 20px 0;
+        }
+
+        .bday-text {
+            color: var(--accent);
+            font-size: 1.6rem;
+            letter-spacing: 4px;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #final-report {
+            font-size: 1.05rem;
+            text-align: left;
+            margin: 25px 0;
+            line-height: 2.4;
+            border-left: 2px solid var(--accent);
+            padding-left: 20px;
+            opacity: 0.9;
+        }
+
+        #footer-status {
+            position: fixed;
+            bottom: 35px;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            opacity: 0.4;
+            width: 100%;
+            text-align: center;
+            letter-spacing: 2px;
         }
     </style>
 </head>
-<body>
+
+<body onclick="startSequence()">
 
     <div id="stars"></div>
-    <div id="scanner"></div>
 
-    <div id="robot">🤖</div>
+    <div class="container">
+        <div id="main-content">
+            <div id="dialogue-box">
+                [ 信号连接成功 ]<br>
+                轻触屏幕，接收属于 WXQ 的星际报告
+            </div>
 
-    <div id="dialogue-box"></div>
+            <div id="wish-area">
+                <p style="font-size: 1.1rem; opacity: 0.7; letter-spacing: 2px;">请闭上眼，在心里许个愿...</p>
+                <div class="flame" id="flame-element"></div>
+                <button onclick="extinguish()">愿望已许下</button>
+            </div>
 
-    <div id="cake">
-        <div class="candle"><div class="flame"></div></div>
-        <div class="tier top"></div>
-        <div class="tier middle"></div>
-        <div class="tier bottom"></div>
-        <h2 style="color: #ff85a1; text-shadow: 0 0 5px white;">HAPPY BIRTHDAY!</h2>
+            <div id="cake-display">
+                <div class="cake">🎂</div>
+                <div id="final-report"></div>
+                <div class="bday-text">HAPPY BIRTHDAY</div>
+            </div>
+        </div>
     </div>
 
+    <div id="footer-status">🛰️ 基站属性：WXQ 专属频率同步中</div>
+
     <script>
-        const robot = document.getElementById('robot');
-        const box = document.getElementById('dialogue-box');
-        const scanner = document.getElementById('scanner');
-        const cake = document.getElementById('cake');
+        const FRIEND_NAME = "WXQ";
 
-        const scripts = [
-            "正在接近地球...",
-            "你好，人类。",
-            "我来这里的目的是查看地球上发生了一件不寻常的事情。",
-            "正在扫描当前区域...",
-            "扫描完成。",
-            "原来今天是个特殊的日子。",
-            "我代表月亮祝你生日快乐！"
-        ];
-
-        async function startSequence() {
-            // 1. 机器人靠近
-            await wait(500);
-            robot.style.opacity = "1";
-            robot.style.transform = "scale(2) translateY(-50px)";
-            
-            await wait(3000);
-
-            // 2. 循环显示对话
-            for(let i=0; i < scripts.length; i++) {
-                if (scripts[i] === "正在扫描当前区域...") {
-                    scanner.style.display = "block";
-                    await showText(scripts[i], 2000);
-                    scanner.style.display = "none";
-                } else {
-                    await showText(scripts[i], 3000);
-                }
-            }
-
-            // 3. 弹出蛋糕
-            robot.style.opacity = "0";
-            cake.style.display = "flex";
+        // 初始化星空
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = star.style.height = (Math.random() * 1.5 + 1) + 'px';
+            star.style.setProperty('--d', (Math.random() * 4 + 2) + 's');
+            starsContainer.appendChild(star);
         }
 
-        function showText(text, delay) {
+        const scripts = [
+            "你好，" + FRIEND_NAME + "。",
+            "这里是为你持续运行的观测基站。",
+            "观测站捕捉到少量“不开心”波动...",
+            "已开启自动化过滤模式。",
+            "我知道有些工作无法推掉，有些忙碌身不由己。",
+            "但请在星光闪烁时，多留一点时间给自己。",
+            "记得按时吃饭，累了就切换到“关机模式”。",
+            "无论宇宙如何喧嚣，这里的信号始终稳定。",
+            "现在，请闭上眼，许下一个关于自己的愿望。"
+        ];
+
+        let sequenceStarted = false;
+        async function startSequence() {
+            if (sequenceStarted) return;
+            sequenceStarted = true;
+
+            const box = document.getElementById('dialogue-box');
+            for (let text of scripts) {
+                await typeText(text);
+                await new Promise(r => setTimeout(r, 1800));
+            }
+
+            box.style.opacity = "0";
+            setTimeout(() => {
+                box.style.display = "none";
+                const wishArea = document.getElementById('wish-area');
+                wishArea.style.display = "flex";
+                setTimeout(() => { wishArea.style.opacity = "1"; }, 100);
+            }, 1000);
+        }
+
+        function typeText(text) {
             return new Promise(resolve => {
-                box.innerText = text;
-                box.style.opacity = "1";
-                setTimeout(() => {
-                    box.style.opacity = "0";
-                    setTimeout(resolve, 500); // 等待淡出动画
-                }, delay);
+                const box = document.getElementById('dialogue-box');
+                box.innerHTML = "";
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        box.innerHTML += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(timer);
+                        setTimeout(resolve, 800);
+                    }
+                }, 120);
             });
         }
 
-        function wait(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
+        function extinguish() {
+            const flame = document.getElementById('flame-element');
+            const wishArea = document.getElementById('wish-area');
+
+            // 纯视觉熄灭
+            flame.style.transform = "scale(0)";
+            flame.style.opacity = "0";
+
+            setTimeout(() => {
+                wishArea.style.opacity = "0";
+                setTimeout(() => {
+                    wishArea.style.display = "none";
+                    showFinal();
+                }, 1000);
+            }, 1500);
         }
 
-        // 点击屏幕开始（手机浏览器通常需要交互才能播放音效或启动动画）
-        window.onclick = () => {
-            if(robot.style.opacity == "0" && cake.style.display == "none") {
-                startSequence();
-            }
-        };
+        function showFinal() {
+            const cakeDisplay = document.getElementById('cake-display');
+            const report = document.getElementById('final-report');
+            cakeDisplay.style.display = "flex";
 
-        // 提示点击
-        box.innerText = "—— 点击屏幕接收星际信号 ——";
-        box.style.opacity = "1";
+            const lines = [
+                "✨ 愿望已化作星光，加密同步至守护基站",
+                "☀️ 生活偶尔疲惫，这里是你专属的停靠点",
+                "🌙 若遇到不开心，信号塔 24h 为你开启",
+                "🎂 生日快乐，愿 WXQ 平安健康，依然做最自由的星体"
+            ];
+
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < lines.length) {
+                    const d = document.createElement('div');
+                    d.innerText = "◈ " + lines[i];
+                    d.style.marginBottom = "10px";
+                    report.appendChild(d);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 1200);
+        }
     </script>
 </body>
+
 </html>
