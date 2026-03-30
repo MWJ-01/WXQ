@@ -46,15 +46,8 @@
         }
 
         @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 0.3;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
         }
 
         .container {
@@ -64,7 +57,6 @@
             z-index: 10;
         }
 
-        /* 优化后的清晰大字号 */
         #dialogue-box {
             font-size: 1.25rem;
             line-height: 2.2;
@@ -95,15 +87,8 @@
         }
 
         @keyframes flicker {
-            from {
-                transform: scaleX(0.95);
-                opacity: 0.8;
-            }
-
-            to {
-                transform: scaleX(1.05);
-                opacity: 1;
-            }
+            from { transform: scaleX(0.95); opacity: 0.8; }
+            to { transform: scaleX(1.05); opacity: 1; }
         }
 
         button {
@@ -139,15 +124,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #final-report {
@@ -187,7 +165,7 @@
             <div id="wish-area">
                 <p style="font-size: 1.1rem; opacity: 0.7; letter-spacing: 2px;">请闭上眼，在心里许个愿...</p>
                 <div class="flame" id="flame-element"></div>
-                <button onclick="extinguish()">愿望已许下</button>
+                <button onclick="extinguish(event)">愿望已许下</button>
             </div>
 
             <div id="cake-display">
@@ -264,11 +242,13 @@
             });
         }
 
-        function extinguish() {
+        function extinguish(event) {
+            // 阻止点击事件向上冒泡到 body
+            if (event) event.stopPropagation();
+
             const flame = document.getElementById('flame-element');
             const wishArea = document.getElementById('wish-area');
 
-            // 纯视觉熄灭
             flame.style.transform = "scale(0)";
             flame.style.opacity = "0";
 
@@ -281,9 +261,15 @@
             }, 1500);
         }
 
+        let finalShown = false; // 最终页面状态锁
         function showFinal() {
+            if (finalShown) return;
+            finalShown = true;
+
             const cakeDisplay = document.getElementById('cake-display');
             const report = document.getElementById('final-report');
+            
+            report.innerHTML = ""; // 确保容器是空的
             cakeDisplay.style.display = "flex";
 
             const lines = [
